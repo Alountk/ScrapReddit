@@ -8,7 +8,10 @@
     "axios": "^0.19.2",
     "btoa": "^1.2.1",
     "cheerio": "^1.0.0-rc.3",
+    "connect-mongo": "^3.2.0",
     "dotenv": "^8.2.0",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.7",
     "nightmare": "^3.0.2"
   },
   "devDependencies": {},
