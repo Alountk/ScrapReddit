@@ -3,6 +3,11 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const connection = require('./connection');
 const Nightmare = require('nightmare');
+require('nightmare-download-manager')(Nightmare);
+const nightmare = Nightmare();
+const fs = require('fs')
+// const show  = ( process.argv[2].includes("true") ) ? true : false;
+// const nightmare  = Nightmare( { show: show } );
 // const {saveDBLink,saveDBDownload} = require('./functions/functions');
 const Page = require('./models/page');
 const cheerio = require('cheerio');
@@ -10,7 +15,7 @@ const $ = require('cheerio');
 const axios = require('axios');
 const url = 'https://old.reddit.com/r/SwitchNSPs/';
 const gameUrl = 'https://old.reddit.com/r/Romstorage/comments/fqd7wk/copperbell_0100c5a0115c4000_nsp/'
-const primUrl = 'https://old.reddit.com';
+const primUrl = 'https://old.reddit.com/';
 const atob = require("atob");
 
 const parsedResults = [];
@@ -97,30 +102,37 @@ const getBase64Game = async (url) => {
             // const urlDrive = 
             const urlDownload = [];
             decoUrl.map(async (e) => {
-                let obj ={};
-                if (!e.indexOf('drive' || !e.length===0)) {
-                    console.log(e);
-                    obj={title,url:e}
-                    urlDownload.push(obj);
-                    //console.log('url:',urlDownload);
-                    // urlDownload.push({ title, url: 'https://' + e.replace(`\n`, '') }) 
-                    //await Page.findOneAndUpdate({ consola: 'Switch' }, { $addToSet: { download: obj } }, { upsert: true, new: true, setDefaultsOnInsert: true }); <-Vuelca a base de datos
-                    //const urlDrive = `https://${e}`
-                    const urlDrive= 'https://drive.google.com/open?id=13k-gTJuGzd_4VRW_eWoLyWgkDDaBW62S';
-                    console.log(urlDrive);
-                    const getAddress = async id => {
-                        console.log(`Ahora checkeamos la id: ${id}`);
-                        const nightmare = new Nightmare({ show:true });
-                        //go to start page, navigate to Detail
-                        try{
-                            await nightmare
-                            .goto(urlDrive)
-                        }
-                        catch(e){
-                            console.error(e);
-                        }
+                try{
+                    let obj ={};
+                    if (!e.indexOf('drive' || !e.length===0)) {
+                        //console.log(1,e);
+                        //console.log(e.split('id=')[1]);
+                        //https://drive.google.com/uc?export=download&confirm=NvEX&id=1rSOIKtNTIF7sToW3PGerMoAkBwNxK56S
+                        const urlGoogle= `https://drive.google.com/uc?id=${e.split('id=')[1].trim()}&export=download`;
+                        //const urlGoogle= `https://drive.google.com/uc?export=download&confirm=NvEX&id=${e.split('id=')[1].trim()}`;
+                        //obj={title,url:e}
+                        obj={title,url:urlGoogle}
+                        urlDownload.push(obj);
+                        console.log(obj);
+                        // nightmare.on('download', (state, downloadItem)=>{
+                        //     if (state==='started'){
+                        //         nightmare.emit('download', `./download/${e}.rar`, downloadItem)
+                        //     }
+                        // } );
+                        // await nightmare.downloadManager()
+                        //     .goto(urlGoogle)
+                        //     .click(`a[href="/uc?export=download&confirm=NvEX&id=${e.split('id=')[1].trim()}"]`)
+                        //     //href="/uc?export=download&confirm=NvEX&id=1rSOIKtNTIF7sToW3PGerMoAkBwNxK56S"
+                        //     .waitDownloadsComplete()
+                        //     .then(()=> {
+                        //         console.log('done')
+                        //     })
                     }
                 }
+                catch(e){
+                    console.error(e);
+                }
+                
             })
             mongoose.connection.close();
         });
@@ -135,3 +147,17 @@ const getBase64Game = async (url) => {
 
 
 // rpBJOHq2PR60pnwJlUyP0
+
+// nightmare.on('download', (state, downloadItem)=>{
+//     if (state==='started'){
+//         nightmare.emit('download', `./download/1.rar`, downloadItem)
+//     }
+// } );
+// nightmare.downloadManager()
+//     .goto('https://drive.google.com/uc?id=1rSOIKtNTIF7sToW3PGerMoAkBwNxK56S&export=download')
+//     .click(`a[href="https://drive.google.com/uc?export=download&confirm=kLrb&id=1rSOIKtNTIF7sToW3PGerMoAkBwNxK56S"]`)
+//     //href="/uc?export=download&confirm=NvEX&id=1rSOIKtNTIF7sToW3PGerMoAkBwNxK56S"
+//     .waitDownloadsComplete()
+//     .then(()=> {
+//         console.log('done')
+//     })

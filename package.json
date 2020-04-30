@@ -10,9 +10,12 @@
     "cheerio": "^1.0.0-rc.3",
     "connect-mongo": "^3.2.0",
     "dotenv": "^8.2.0",
+    "fs": "0.0.1-security",
+    "googleapis": "^39.2.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.7",
-    "nightmare": "^3.0.2"
+    "nightmare": "^3.0.2",
+    "nightmare-download-manager": "^0.2.5"
   },
   "devDependencies": {},
   "scripts": {
